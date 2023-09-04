@@ -1,7 +1,7 @@
 name: Run CI to see if it works
 on:
   push:
-    branches: master
+    branches: main
 
 jobs:
   build:
