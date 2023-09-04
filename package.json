@@ -1,0 +1,24 @@
+{
+  "name": "eduadmin-google",
+  "version": "1.0.0",
+  "description": "This plugin adds support for Google Analytics / Tag Manager to your EduAdmin plugin (WordPress only, not the course portal).",
+  "repository": "https://github.com/MultinetInteractive/eduadmin-google.git",
+  "author": "Chris Gårdenberg <chga@multinet.se>",
+  "license": "GPL-3.0",
+  "private": false,
+  "scripts": {
+    "dev": "yarn install && yarn gulp",
+    "compile": "yarn install && yarn gulp deploy"
+  },
+  "config": {
+    "eduadmin": {
+      "testedUpTo": "6.0",
+      "requiresAtLeast": "5.8",
+      "minimumPhpVersion": "7.0"
+    }
+  },
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-replace": "^1.1.4"
+  }
+}

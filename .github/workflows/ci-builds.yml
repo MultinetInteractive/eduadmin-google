@@ -1,0 +1,23 @@
+name: Run CI to see if it works
+on:
+  push:
+    branches: master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+          submodules: false
+          lfs: false
+      - name: Get Node 18.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18.x
+      - name: Build source files
+        shell: bash
+        run: |
+          yarn
+          yarn gulp deploy
