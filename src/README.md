@@ -1,4 +1,4 @@
-=== EduAdmin - Google Analytics / Tag Manager WordPress plugin ===
+=== EduAdmin - Google Analytics / Tag Manager ===
 Contributors: mnchga
 Tags: booking, participants, courses, events, eduadmin, lega online, google, analytics, tag manager
 Requires at least: $PLUGINATLEAST$
@@ -11,6 +11,6 @@ This plugin adds support for Google Analytics / Tag Manager to your EduAdmin plu
 
 == Description ==
 
-# EduAdmin - Google Analytics / Tag Manager WordPress plugin
+# EduAdmin - Google Analytics / Tag Manager WordPress
 
 This plugin adds support for Google Analytics / Tag Manager to your [EduAdmin-Wordpress plugin](https://github.com/MultinetInteractive/EduAdmin-WordPress).

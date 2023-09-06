@@ -2,7 +2,7 @@
 defined( 'ABSPATH' ) or die( 'This plugin must be run within the scope of WordPress.' );
 
 /*
- * Plugin Name:	EduAdmin Booking - Google Analytics / Tag Manager plugin
+ * Plugin Name:	EduAdmin - Google Analytics / Tag Manager
  * Plugin URI:	https://www.eduadmin.se
  * Description:	This plugin adds support for Google Analytics / Tag Manager to your EduAdmin plugin (WordPress only, not the course portal).
  * Tags: booking, participants, courses, events, eduadmin, lega online, google, analytics, tag manager
