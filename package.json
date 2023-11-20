@@ -12,7 +12,7 @@
   },
   "config": {
     "eduadmin": {
-      "testedUpTo": "6.0",
+      "testedUpTo": "6.4",
       "requiresAtLeast": "5.8",
       "minimumPhpVersion": "7.0"
     }

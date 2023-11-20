@@ -1,8 +1,8 @@
 <?php
 defined( 'ABSPATH' ) or die( 'This plugin must be run within the scope of WordPress.' );
 
-if ( ! class_exists( 'EDU_Google' ) ) {
-	class EDU_Google extends EDU_Integration {
+if ( ! class_exists( 'EDUGTAG_Google' ) ) {
+	class EDUGTAG_Google extends EDU_Integration {
 		/**
 		 * Constructor
 		 */
@@ -136,7 +136,7 @@ if ( ! class_exists( 'EDU_Google' ) ) {
                 <script type="text/javascript">gtag('event', 'view_item_list', {
                         'item_list_id': 'course_list',
                         'item_list_name': 'Course list',
-                        'items': <?php echo json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });</script>
+                        'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });</script>
 				<?php
 			}
 		}
@@ -161,7 +161,7 @@ if ( ! class_exists( 'EDU_Google' ) ) {
                 <script type="text/javascript">gtag('event', 'view_item_list', {
                         'item_list_id': 'event_list',
                         'item_list_name': 'Event list',
-                        'items': <?php echo json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });</script>
+                        'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });</script>
 				<?php
 			}
 		}
@@ -183,7 +183,7 @@ if ( ! class_exists( 'EDU_Google' ) ) {
 			if ( count( $gtag_items ) > 0 ) {
 				?>
                 <script type="text/javascript">gtag('event', 'view_item', {
-                        'items': <?php echo json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });</script>
+                        'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });</script>
 				<?php
 			}
 		}
@@ -203,7 +203,7 @@ if ( ! class_exists( 'EDU_Google' ) ) {
 			if ( count( $gtag_items ) > 0 ) {
 				?>
                 <script type="text/javascript">gtag('event', 'view_item', {
-                        'items': <?php echo json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });</script>
+                        'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });</script>
 				<?php
 			}
 		}
@@ -225,7 +225,7 @@ if ( ! class_exists( 'EDU_Google' ) ) {
 			if ( count( $gtag_items ) > 0 ) {
 				?>
                 <script type="text/javascript">gtag('event', 'begin_checkout', {
-                        'items': <?php echo json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });</script>
+                        'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });</script>
 				<?php
 			}
 		}
@@ -245,7 +245,7 @@ if ( ! class_exists( 'EDU_Google' ) ) {
 			if ( count( $gtag_items ) > 0 ) {
 				?>
                 <script type="text/javascript">gtag('event', 'begin_checkout', {
-                        'items': <?php echo json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });</script>
+                        'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });</script>
 				<?php
 			}
 		}
@@ -313,7 +313,7 @@ if ( ! class_exists( 'EDU_Google' ) ) {
                         'currency': '<?php echo esc_js( $currency ); ?>',
                         'value': <?php echo esc_js( $booking_info["TotalPriceExVat"] ); ?>,
                         'tax': <?php echo esc_js( $booking_info["VatSum"] ); ?>,
-                        'items': <?php echo json_encode( $order_rows, JSON_PRETTY_PRINT ); ?>
+                        'items': <?php echo wp_json_encode( $order_rows, JSON_PRETTY_PRINT ); ?>
                     });</script>
 				<?php
 			}
