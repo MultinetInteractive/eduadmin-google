@@ -6,7 +6,7 @@ const pinfo = require("./package.json");
 
 gulp.task("readme-version", function () {
     return gulp
-        .src("src/README.md")
+        .src("src/readme.*")
         .pipe(replace("$PLUGINVERSION$", pinfo.version))
         .pipe(replace("$PLUGINATLEAST$", pinfo.config.eduadmin.requiresAtLeast))
         .pipe(replace("$PLUGINTESTEDTO$", pinfo.config.eduadmin.testedUpTo))
@@ -34,7 +34,7 @@ gulp.task("plugin-version", function () {
 
 gulp.task("default", function () {
     gulp.watch("src/eduadmin-google.php", gulp.series("plugin-version"));
-    gulp.watch("src/README.md", gulp.series("readme-version"));
+    gulp.watch("src/readme.*", gulp.series("readme-version"));
     gulp.watch(
         "package.json",
         gulp.series("readme-version", "plugin-version")

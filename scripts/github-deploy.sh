@@ -42,6 +42,7 @@ rm -fR "$PROJECT_ROOT"/scripts
 rm -fR "$PROJECT_ROOT"/.git
 rm -fR "$PROJECT_ROOT"/node_modules
 rm -fR "$PROJECT_ROOT"/src
+rm -fR "$PROJECT_ROOT"/readme.md
 
 # Make sure we are in the project root
 cd "$PROJECT_ROOT"
