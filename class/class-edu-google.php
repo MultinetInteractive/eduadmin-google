@@ -9,9 +9,9 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 		public function __construct() {
 			parent::__construct();
 
-			$this->id          = 'eduadmin-google';
-			$this->displayName = __( 'Google Analytics / Tag Manager', 'eduadmin-google' );
-			$this->description = __( 'Plugin to enable more advanced Google Analytics / Tag Manager integration', 'eduadmin-google' );
+			$this->id          = 'eduadmin-analytics';
+			$this->displayName = __( 'Google Analytics / Tag Manager', 'eduadmin-analytics' );
+			$this->description = __( 'Plugin to enable more advanced Google Analytics / Tag Manager integration', 'eduadmin-analytics' );
 			$this->type        = 'plugin';
 
 			$this->init_form_fields();
@@ -27,7 +27,7 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 			add_action( 'eduadmin-programme-bookingform-view', array( $this, 'track_programme_booking_view' ) );
 			add_action( 'eduadmin-booking-completed', array( $this, 'track_booking_completed' ) );
 
-			add_shortcode( 'eduadmin-google-testpage', array( $this, 'test_page' ) );
+			add_shortcode( 'eduadmin-analytics-testpage', array( $this, 'test_page' ) );
 		}
 
 		/**
@@ -37,21 +37,21 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 		public function init_form_fields() {
 			$this->setting_fields = [
 				'enabled'            => [
-					'title'       => __( 'Enabled', 'eduadmin-google' ),
+					'title'       => __( 'Enabled', 'eduadmin-analytics' ),
 					'type'        => 'checkbox',
-					'description' => __( 'Enable Google Analytics / Tag Manager integration', 'eduadmin-google' ),
+					'description' => __( 'Enable Google Analytics / Tag Manager integration', 'eduadmin-analytics' ),
 					'default'     => 'no',
 				],
 				'google-tag-manager' => [
-					'title'       => __( 'Google Tag Manager ID', 'eduadmin-google' ),
+					'title'       => __( 'Google Tag Manager ID', 'eduadmin-analytics' ),
 					'type'        => 'text',
-					'description' => __( 'The ID of the Google Tag Manager', 'eduadmin-google' ),
+					'description' => __( 'The ID of the Google Tag Manager', 'eduadmin-analytics' ),
 					'default'     => '',
 				],
 				'google-tag'         => [
-					'title'       => __( 'Google Tag ID', 'eduadmin-google' ),
+					'title'       => __( 'Google Tag ID', 'eduadmin-analytics' ),
 					'type'        => 'text',
-					'description' => __( 'The ID of the Google Tag', 'eduadmin-google' ),
+					'description' => __( 'The ID of the Google Tag', 'eduadmin-analytics' ),
 					'default'     => '',
 				],
 			];
@@ -392,7 +392,7 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 
 				return '<pre>' . print_r( $ebi, true ) . '</pre>';
 			} else {
-				return __( 'No booking with that ID was found.', 'eduadmin-google' );
+				return __( 'No booking with that ID was found.', 'eduadmin-analytics' );
 			}
 
 		}

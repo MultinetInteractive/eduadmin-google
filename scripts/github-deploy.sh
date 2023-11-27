@@ -16,9 +16,9 @@ if [[ -z "$GITHUB_REF" ]]; then
 fi
 
 
-PLUGIN="eduadmin-google"
+PLUGIN="eduadmin-analytics"
 PROJECT_ROOT=$GITHUB_WORKSPACE
-VERSION="$(cat $PROJECT_ROOT/eduadmin-google.php | grep Version: | head -1 | cut -d: -f2 | tr -d '[[:space:]]')"
+VERSION="$(cat $PROJECT_ROOT/eduadmin-analytics.php | grep Version: | head -1 | cut -d: -f2 | tr -d '[[:space:]]')"
 
 echo "Version: $VERSION of $PLUGIN"
 
@@ -84,5 +84,5 @@ rm -fR svn
 
 curl -X POST \
 -H 'Content-type: application/json' \
---data '{"username": "GitHub Actions", "channel":"#wordpress-eduadmin", "icon_url": "https://slack-files2.s3-us-west-2.amazonaws.com/avatars/2017-12-19/288981919427_f45f04edd92902a96859_512.png","text": "EduAdmin Google plugin version '"$VERSION"' deployed to <https://sv.wordpress.org/plugins/eduadmin-google/|wp.org> :tada:"}' \
+--data '{"username": "GitHub Actions", "channel":"#wordpress-eduadmin", "icon_url": "https://slack-files2.s3-us-west-2.amazonaws.com/avatars/2017-12-19/288981919427_f45f04edd92902a96859_512.png","text": "EduAdmin Google plugin version '"$VERSION"' deployed to <https://sv.wordpress.org/plugins/eduadmin-analytics/|wp.org> :tada:"}' \
 $SLACK_HOOKURL

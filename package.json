@@ -1,5 +1,5 @@
 {
-  "name": "eduadmin-google",
+  "name": "eduadmin-analytics",
   "version": "1.0.0",
   "description": "This plugin adds support for Google Analytics / Tag Manager to your EduAdmin plugin (WordPress only, not the course portal).",
   "repository": "https://github.com/MultinetInteractive/eduadmin-google.git",

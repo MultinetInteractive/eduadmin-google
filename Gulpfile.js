@@ -21,7 +21,7 @@ gulp.task("readme-version", function () {
 
 gulp.task("plugin-version", function () {
     return gulp
-        .src("src/eduadmin-google.php")
+        .src("src/eduadmin-analytics.php")
         .pipe(replace("$PLUGINVERSION$", pinfo.version))
         .pipe(replace("$PLUGINATLEAST$", pinfo.config.eduadmin.requiresAtLeast))
         .pipe(replace("$PLUGINTESTEDTO$", pinfo.config.eduadmin.testedUpTo))
@@ -33,7 +33,7 @@ gulp.task("plugin-version", function () {
 
 
 gulp.task("default", function () {
-    gulp.watch("src/eduadmin-google.php", gulp.series("plugin-version"));
+    gulp.watch("src/eduadmin-analytics.php", gulp.series("plugin-version"));
     gulp.watch("src/readme.*", gulp.series("readme-version"));
     gulp.watch(
         "package.json",
