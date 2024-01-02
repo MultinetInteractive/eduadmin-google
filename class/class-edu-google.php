@@ -17,8 +17,6 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 			$this->init_form_fields();
 			$this->init_settings();
 
-			add_action( 'wp_head', array( $this, 'add_gtag_script' ) );
-
 			add_action( 'eduadmin-list-course-view', array( $this, 'track_list_course_view' ) );
 			add_action( 'eduadmin-list-event-view', array( $this, 'track_list_event_view' ) );
 			add_action( 'eduadmin-detail-view', array( $this, 'track_detail_view' ) );
@@ -36,79 +34,17 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 		 */
 		public function init_form_fields() {
 			$this->setting_fields = [
-				'enabled'            => [
+				'enabled' => [
 					'title'       => __( 'Enabled', 'eduadmin-analytics' ),
 					'type'        => 'checkbox',
 					'description' => __( 'Enable Google Analytics / Tag Manager integration', 'eduadmin-analytics' ),
 					'default'     => 'no',
 				],
-				'google-tag-manager' => [
-					'title'       => __( 'Google Tag Manager ID', 'eduadmin-analytics' ),
-					'type'        => 'text',
-					'description' => __( 'The ID of the Google Tag Manager', 'eduadmin-analytics' ),
-					'default'     => '',
-				],
-				'google-tag'         => [
-					'title'       => __( 'Google Tag ID', 'eduadmin-analytics' ),
-					'type'        => 'text',
-					'description' => __( 'The ID of the Google Tag', 'eduadmin-analytics' ),
-					'default'     => '',
-				],
 			];
-		}
-
-		public function add_gtag_script() {
-			if ( 'no' === $this->get_option( 'enabled', 'no' ) ) {
-				return;
-			}
-
-			if ( ! empty( $this->get_option( 'google-tag-manager' ) ) ) {
-				?>
-                <!-- Google Tag Manager -->
-                <script>(function (w, d, s, l, i) {
-                        w[l] = w[l] || [];
-                        w[l].push({
-                            'gtm.start':
-                                new Date().getTime(), event: 'gtm.js'
-                        });
-                        var f = d.getElementsByTagName(s)[0],
-                            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
-                        j.async = true;
-                        j.src =
-                            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-                        f.parentNode.insertBefore(j, f);
-                    })(window, document, 'script', 'eduAdminDataLayer', '<?php echo esc_js( $this->get_option( 'google-tag-manager' ) ); ?>');</script>
-                <!-- End Google Tag Manager -->
-				<?php
-			}
-
-			if ( ! empty( $this->get_option( 'google-tag' ) ) ) {
-				$currency = EDU()->get_option( 'eduadmin-currency', 'SEK' );
-				?>
-                <script async
-                        src="https://www.googletagmanager.com/gtag/js?id=<?php echo esc_attr( $this->get_option( 'google-tag' ) ); ?>&l=eduAdminDataLayer"></script>
-                <script>
-                    window.eduAdminDataLayer = window.eduAdminDataLayer || [];
-
-                    function gtag() {
-                        eduAdminDataLayer.push(arguments);
-                    }
-
-                    gtag('js', new Date());
-                    gtag('config', '<?php echo esc_js( $this->get_option( 'google-tag' ) ); ?>', {
-                        'currency': '<?php echo esc_js( $currency ); ?>',
-                    });
-                </script>
-				<?php
-			}
 		}
 
 		public function is_configured_and_enabled() {
 			if ( 'no' === $this->get_option( 'enabled', 'no' ) ) {
-				return false;
-			}
-
-			if ( empty( $this->get_option( 'google-tag' ) ) && empty( $this->get_option( 'google-tag-manager' ) ) ) {
 				return false;
 			}
 
@@ -128,15 +64,27 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 					'item_name' => $course["CourseName"],
 				];
 
+				if ( isset( $course['Events'] ) ) {
+					foreach ( $course['Events'] as $event ) {
+						$course_item = $this->getItemsPriced( $event['PriceNames'], $course_item );
+					}
+				}
+
+				if ( ! isset( $course_item['price'] ) ) {
+					$course_item = $this->getItemsPriced( $course['PriceNames'], $course_item );
+				}
 				$gtag_items = $this->getItemsCategorized( $course["Categories"], $course_item, $gtag_items );
 			}
 
 			if ( count( $gtag_items ) > 0 ) {
 				?>
-                <script type="text/javascript">gtag('event', 'view_item_list', {
-                        'item_list_id': 'course_list',
-                        'item_list_name': 'Course list',
-                        'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });</script>
+                <script type="text/javascript">if (gtag) {
+                        gtag('event', 'view_item_list', {
+                            'item_list_id': 'course_list',
+                            'item_list_name': 'Course list',
+                            'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });
+                    }
+                </script>
 				<?php
 			}
 		}
@@ -147,21 +95,30 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 			}
 
 			$gtag_items = [];
+
 			foreach ( $events as $course ) {
 				$course_item = [
 					'item_id'   => 'EV_' . $course["CourseTemplateId"],
 					'item_name' => $course["CourseName"],
 				];
 
+				$course_item = $this->getItemsPriced( $course['PriceNames'], $course_item );
+
+				if ( ! isset( $course_item['price'] ) ) {
+					$course_item = $this->getItemsPriced( $course['CourseTemplate']['PriceNames'], $course_item );
+				}
+
 				$gtag_items = $this->getItemsCategorized( $course["Categories"], $course_item, $gtag_items );
 			}
 
 			if ( count( $gtag_items ) > 0 ) {
 				?>
-                <script type="text/javascript">gtag('event', 'view_item_list', {
-                        'item_list_id': 'event_list',
-                        'item_list_name': 'Event list',
-                        'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });</script>
+                <script type="text/javascript">if (gtag) {
+                        gtag('event', 'view_item_list', {
+                            'item_list_id': 'event_list',
+                            'item_list_name': 'Event list',
+                            'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });
+                    }</script>
 				<?php
 			}
 		}
@@ -171,6 +128,8 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 				return;
 			}
 
+			$currency = EDU()->get_option( 'eduadmin-currency', 'SEK' );
+
 			$gtag_items = [];
 
 			$course_item = [
@@ -178,12 +137,23 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 				'item_name' => $course_template["CourseName"],
 			];
 
+			foreach ( $course_template['Events'] as $event ) {
+				$course_item = $this->getItemsPriced( $event['PriceNames'], $course_item );
+			}
+
+			if ( ! isset( $course_item['price'] ) ) {
+				$course_item = $this->getItemsPriced( $course_template['PriceNames'], $course_item );
+			}
+
 			$gtag_items = $this->getItemsCategorized( $course_template["Categories"], $course_item, $gtag_items );
 
 			if ( count( $gtag_items ) > 0 ) {
 				?>
-                <script type="text/javascript">gtag('event', 'view_item', {
-                        'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });</script>
+                <script type="text/javascript">if (gtag) {
+                        gtag('event', 'view_item', {
+                            'currency': '<?php echo esc_js( $currency ); ?>',
+                            'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });
+                    }</script>
 				<?php
 			}
 		}
@@ -193,17 +163,28 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 				return;
 			}
 
-			$gtag_items = [
-				[
-					'item_id'   => 'PI_' . $programme["ProgrammeId"],
-					'item_name' => $programme["ProgrammeName"],
-				]
+			$currency = EDU()->get_option( 'eduadmin-currency', 'SEK' );
+
+			$gtag_items = [];
+
+			$course_item = [
+				'item_id'   => 'PI_' . $programme["ProgrammeId"],
+				'item_name' => $programme["ProgrammeName"],
 			];
+
+			if ( ! isset( $course_item['price'] ) ) {
+				$course_item = $this->getItemsPriced( $programme['PriceNames'], $course_item );
+			}
+
+			$gtag_items[] = $course_item;
 
 			if ( count( $gtag_items ) > 0 ) {
 				?>
-                <script type="text/javascript">gtag('event', 'view_item', {
-                        'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });</script>
+                <script type="text/javascript">if (gtag) {
+                        gtag('event', 'view_item', {
+                            'currency': '<?php echo esc_js( $currency ); ?>',
+                            'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });
+                    }</script>
 				<?php
 			}
 		}
@@ -213,6 +194,8 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 				return;
 			}
 
+			$currency = EDU()->get_option( 'eduadmin-currency', 'SEK' );
+
 			$gtag_items = [];
 
 			$course_item = [
@@ -220,12 +203,23 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 				'item_name' => $course_template["CourseName"],
 			];
 
+			foreach ( $course_template['Events'] as $event ) {
+				$course_item = $this->getItemsPriced( $event['PriceNames'], $course_item );
+			}
+
+			if ( ! isset( $course_item['price'] ) ) {
+				$course_item = $this->getItemsPriced( $course_template['PriceNames'], $course_item );
+			}
+
 			$gtag_items = $this->getItemsCategorized( $course_template["Categories"], $course_item, $gtag_items );
 
 			if ( count( $gtag_items ) > 0 ) {
 				?>
-                <script type="text/javascript">gtag('event', 'begin_checkout', {
-                        'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });</script>
+                <script type="text/javascript">if (gtag) {
+                        gtag('event', 'begin_checkout', {
+                            'currency': '<?php echo esc_js( $currency ); ?>',
+                            'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });
+                    }</script>
 				<?php
 			}
 		}
@@ -235,17 +229,28 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 				return;
 			}
 
-			$gtag_items = [
-				[
-					'item_id'   => 'PI_' . $programme["ProgrammeId"],
-					'item_name' => $programme["ProgrammeName"],
-				]
+			$currency = EDU()->get_option( 'eduadmin-currency', 'SEK' );
+
+			$gtag_items = [];
+
+			$course_item = [
+				'item_id'   => 'PI_' . $programme["ProgrammeId"],
+				'item_name' => $programme["ProgrammeName"],
 			];
+
+			if ( ! isset( $course_item['price'] ) ) {
+				$course_item = $this->getItemsPriced( $programme['PriceNames'], $course_item );
+			}
+
+			$gtag_items[] = $course_item;
 
 			if ( count( $gtag_items ) > 0 ) {
 				?>
-                <script type="text/javascript">gtag('event', 'begin_checkout', {
-                        'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });</script>
+                <script type="text/javascript">if (gtag) {
+                        gtag('event', 'begin_checkout', {
+                            'currency': '<?php echo esc_js( $currency ); ?>',
+                            'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });
+                    }</script>
 				<?php
 			}
 		}
@@ -257,46 +262,19 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 
 			$currency = EDU()->get_option( 'eduadmin-currency', 'SEK' );
 
-			$event_info     = null;
 			$transaction_id = null;
-			$is_programme   = false;
 
 			if ( key_exists( 'BookingId', $booking_info ) ) {
-				$event_info     = EDUAPI()->OData->Events->GetItem( $booking_info['EventId'] );
 				$transaction_id = "B_" . $booking_info['BookingId'];
 			} else if ( key_exists( 'ProgrammeBookingId', $booking_info ) ) {
-				$event_info     = EDUAPI()->OData->ProgrammeStarts->GetItem( $booking_info['ProgrammeStartId'] );
 				$transaction_id = "P_" . $booking_info['ProgrammeBookingId'];
-				$is_programme   = true;
 			}
 
 			$order_rows = [];
 
-			if ( ! $is_programme ) {
-				$row = [
-					'item_number' => 'EV_' . $event_info['CourseTemplateId'],
-					'item_name'   => $event_info['EventName'],
-					'quantity'    => 1,
-					'price'       => 0,
-					'discount'    => 0,
-				];
-
-			} else {
-				$row = [
-					'item_number' => 'PSI_' . $event_info['ProgrammeStartId'],
-					'item_name'   => $event_info['ProgrammeStartName'],
-					'quantity'    => 1,
-					'price'       => 0,
-					'discount'    => 0,
-				];
-
-			}
-
-			$order_rows[] = $row;
-
 			foreach ( $booking_info['OrderRows'] as $order_row ) {
 				$row = [
-					'item_number' => 'OR_' . $order_row['OrderRowId'],
+					'item_number' => isset( $order_row['ItemNumber'] ) ? $order_row['ItemNumber'] : 'OR_' . $order_row['OrderRowId'],
 					'item_name'   => $order_row['Description'],
 					'quantity'    => $order_row['Quantity'],
 					'price'       => $order_row['TotalPriceIncDiscount'] / $order_row['Quantity'],
@@ -308,13 +286,15 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 
 			if ( count( $order_rows ) > 0 ) {
 				?>
-                <script type="text/javascript">gtag('event', 'purchase', {
-                        'transaction_id': '<?php echo esc_js( $transaction_id ); ?>',
-                        'currency': '<?php echo esc_js( $currency ); ?>',
-                        'value': <?php echo esc_js( $booking_info["TotalPriceExVat"] ); ?>,
-                        'tax': <?php echo esc_js( $booking_info["VatSum"] ); ?>,
-                        'items': <?php echo wp_json_encode( $order_rows, JSON_PRETTY_PRINT ); ?>
-                    });</script>
+                <script type="text/javascript">if (gtag) {
+                        gtag('event', 'purchase', {
+                            'transaction_id': '<?php echo esc_js( $transaction_id ); ?>',
+                            'currency': '<?php echo esc_js( $currency ); ?>',
+                            'value': <?php echo esc_js( $booking_info["TotalPriceExVat"] ); ?>,
+                            'tax': <?php echo esc_js( $booking_info["VatSum"] ); ?>,
+                            'items': <?php echo wp_json_encode( $order_rows, JSON_PRETTY_PRINT ); ?>
+                        });
+                    }</script>
 				<?php
 			}
 		}
@@ -419,6 +399,24 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 			$gtag_items[] = $course_item;
 
 			return $gtag_items;
+		}
+
+		public function getItemsPriced( $price_names, array $course_item ): array {
+			$lowest_price_name = null;
+
+			if ( $price_names == null ) {
+				return $course_item;
+			}
+
+			foreach ( $price_names as $price_name ) {
+				if ( $lowest_price_name == null || $price_name['Price'] < $lowest_price_name['Price'] ) {
+					$lowest_price_name = $price_name;
+				}
+			}
+
+			$course_item['price'] = $lowest_price_name['Price'];
+
+			return $course_item;
 		}
 	}
 }

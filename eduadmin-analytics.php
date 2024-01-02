@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) or die( 'This plugin must be run within the scope of WordPr
  * Plugin URI:	https://www.eduadmin.se
  * Description:	This plugin adds support for Google Analytics / Tag Manager to your EduAdmin plugin (WordPress only, not the course portal).
  * Tags: booking, participants, courses, events, eduadmin, lega online, google, analytics, tag manager
- * Version:	1.0.0
+ * Version:	1.1.0
  * GitHub Plugin URI: multinetinteractive/eduadmin-google
  * GitHub Plugin URI: https://github.com/multinetinteractive/eduadmin-google
  * Requires at least: 5.8
