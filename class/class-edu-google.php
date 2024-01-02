@@ -274,7 +274,7 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 
 			foreach ( $booking_info['OrderRows'] as $order_row ) {
 				$row = [
-					'item_number' => isset( $order_row['ItemNumber'] ) ? $order_row['ItemNumber'] : 'OR_' . $order_row['OrderRowId'],
+					'item_id' => isset( $order_row['ItemNumber'] ) ? $order_row['ItemNumber'] : 'OR_' . $order_row['OrderRowId'],
 					'item_name'   => $order_row['Description'],
 					'quantity'    => $order_row['Quantity'],
 					'price'       => $order_row['TotalPriceIncDiscount'] / $order_row['Quantity'],
