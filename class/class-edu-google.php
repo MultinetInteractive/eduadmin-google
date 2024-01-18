@@ -78,7 +78,7 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 
 			if ( count( $gtag_items ) > 0 ) {
 				?>
-                <script type="text/javascript">if (gtag) {
+                <script type="text/javascript">if (typeof gtag != 'undefined') {
                         gtag('event', 'view_item_list', {
                             'item_list_id': 'course_list',
                             'item_list_name': 'Course list',
@@ -113,7 +113,7 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 
 			if ( count( $gtag_items ) > 0 ) {
 				?>
-                <script type="text/javascript">if (gtag) {
+                <script type="text/javascript">if (typeof gtag != 'undefined') {
                         gtag('event', 'view_item_list', {
                             'item_list_id': 'event_list',
                             'item_list_name': 'Event list',
@@ -149,7 +149,7 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 
 			if ( count( $gtag_items ) > 0 ) {
 				?>
-                <script type="text/javascript">if (gtag) {
+                <script type="text/javascript">if (typeof gtag != 'undefined') {
                         gtag('event', 'view_item', {
                             'currency': '<?php echo esc_js( $currency ); ?>',
                             'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });
@@ -180,7 +180,7 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 
 			if ( count( $gtag_items ) > 0 ) {
 				?>
-                <script type="text/javascript">if (gtag) {
+                <script type="text/javascript">if (typeof gtag != 'undefined') {
                         gtag('event', 'view_item', {
                             'currency': '<?php echo esc_js( $currency ); ?>',
                             'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });
@@ -215,7 +215,7 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 
 			if ( count( $gtag_items ) > 0 ) {
 				?>
-                <script type="text/javascript">if (gtag) {
+                <script type="text/javascript">if (typeof gtag != 'undefined') {
                         gtag('event', 'begin_checkout', {
                             'currency': '<?php echo esc_js( $currency ); ?>',
                             'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });
@@ -246,7 +246,7 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 
 			if ( count( $gtag_items ) > 0 ) {
 				?>
-                <script type="text/javascript">if (gtag) {
+                <script type="text/javascript">if (typeof gtag != 'undefined') {
                         gtag('event', 'begin_checkout', {
                             'currency': '<?php echo esc_js( $currency ); ?>',
                             'items': <?php echo wp_json_encode( $gtag_items, JSON_PRETTY_PRINT ); ?> });
@@ -286,7 +286,7 @@ if ( ! class_exists( 'EDUGTAG_Google' ) ) {
 
 			if ( count( $order_rows ) > 0 ) {
 				?>
-                <script type="text/javascript">if (gtag) {
+                <script type="text/javascript">if (typeof gtag != 'undefined') {
                         gtag('event', 'purchase', {
                             'transaction_id': '<?php echo esc_js( $transaction_id ); ?>',
                             'currency': '<?php echo esc_js( $currency ); ?>',
